@@ -12,36 +12,49 @@
     "dark": "/icon-hexjobs-white.svg"
   },
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "Documentation",
-        "pages": [
-          "introduction"
+        "language": "en",
+        "default": true,
+        "tabs": [
+          {
+            "tab": "Documentation",
+            "pages": [
+              "introduction"
+            ]
+          },
+          {
+            "tab": "MCP Server",
+            "pages": [
+              "home/mcp/introduction",
+              "home/mcp/tools",
+              "home/mcp/examples",
+              "home/mcp/troubleshooting"
+            ]
+          }
         ]
       },
       {
-        "tab": "MCP Server",
-        "pages": [
-          "home/mcp/introduction",
-          "home/mcp/tools",
-          "home/mcp/examples",
-          "home/mcp/troubleshooting"
+        "language": "pl",
+        "tabs": [
+          {
+            "tab": "Dokumentacja",
+            "pages": [
+              "introduction"
+            ]
+          },
+          {
+            "tab": "Serwer MCP",
+            "pages": [
+              "home/mcp/pl/introduction",
+              "home/mcp/pl/tools",
+              "home/mcp/pl/examples",
+              "home/mcp/pl/troubleshooting"
+            ]
+          }
         ]
       }
-    ],
-    "global": {
-      "languages": [
-        {
-          "language": "en",
-          "default": true,
-          "href": "/"
-        },
-        {
-          "language": "pl",
-          "href": "/pl"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/dark.svg",
