@@ -7,7 +7,10 @@
     "light": "#6367EB",
     "dark": "#6367EB"
   },
-  "favicon": "/favicon.svg",
+  "favicon": {
+    "light": "/icon-hexjobs-black.svg",
+    "dark": "/icon-hexjobs-white.svg"
+  },
   "navigation": {
     "languages": [
       {
@@ -55,7 +58,10 @@
       }
     ]
   },
-  "logo": "/logo/light.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
   "navbar": {
     "links": [
       {
@@ -87,7 +93,10 @@
     }
   },
   "appearance": {
-    "default": "dark",
-    "strict": true
+    "default": "system",
+    "strict": false
+  },
+  "seo": {
+    "indexing": "navigable"
   }
 }
