@@ -25,27 +25,6 @@
           "introduction"
         ]
       }
-    ],
-    "products": [
-      {
-        "product": "MCP Integration",
-        "tabs": [
-          {
-            "tab": "Getting Started",
-            "pages": [
-              "home/mcp/introduction",
-              "home/mcp/tools"
-            ]
-          },
-          {
-            "tab": "Guides",
-            "pages": [
-              "home/mcp/examples",
-              "home/mcp/troubleshooting"
-            ]
-          }
-        ]
-      }
     ]
   },
   "logo": "/logo/light.svg",
