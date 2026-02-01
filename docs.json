@@ -9,41 +9,11 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Main Page (hexjobs.com)",
-          "icon": "newspaper",
-          "href": "https://hexjobs.com/"
-        }
-      ]
-    },
     "tabs": [
       {
         "tab": "Documentation",
         "pages": [
           "introduction"
-        ]
-      }
-    ],
-    "products": [
-      {
-        "product": "MCP Integration",
-        "tabs": [
-          {
-            "tab": "Getting Started",
-            "pages": [
-              "home/mcp/introduction",
-              "home/mcp/tools"
-            ]
-          },
-          {
-            "tab": "Guides",
-            "pages": [
-              "home/mcp/examples",
-              "home/mcp/troubleshooting"
-            ]
-          }
         ]
       }
     ]
