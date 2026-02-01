@@ -18,14 +18,30 @@
         }
       ]
     },
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "pages": [
+          "introduction"
+        ]
+      }
+    ],
     "products": [
       {
-        "product": "MCP",
+        "product": "MCP Integration",
         "tabs": [
           {
-            "tab": "Home",
+            "tab": "Getting Started",
             "pages": [
-              "home/mcp/introduction"
+              "home/mcp/introduction",
+              "home/mcp/tools"
+            ]
+          },
+          {
+            "tab": "Guides",
+            "pages": [
+              "home/mcp/examples",
+              "home/mcp/troubleshooting"
             ]
           }
         ]
@@ -42,8 +58,8 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Visit Hexjobs",
+      "href": "https://hexjobs.com"
     }
   },
   "contextual": {

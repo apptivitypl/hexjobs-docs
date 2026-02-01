@@ -1,0 +1,373 @@
+---
+title: "Usage Examples"
+description: "Real-world examples of using Hexjobs MCP server"
+---
+
+# Usage Examples
+
+Learn how to effectively use the Hexjobs MCP server with real-world examples.
+
+## Basic Job Search
+
+### Simple Text Search
+
+Search for jobs using natural language:
+
+```
+Find Python developer jobs
+```
+
+The AI assistant will use the `search` tool with:
+- `query`: "python developer"
+- Returns top 20 matching offers
+
+---
+
+### Search by Company
+
+Look for positions at specific companies:
+
+```
+Show me all jobs at Google
+```
+
+Uses:
+- `companies`: ["Google"]
+- Returns all available positions
+
+---
+
+## Location-Based Search
+
+### Single City
+
+```
+Find IT jobs in Warsaw
+```
+
+Parameters:
+- `query`: "IT"
+- `country`: "PL"
+- `cities`: ["Warszawa"]
+
+---
+
+### Multiple Cities
+
+```
+Search for Marketing positions in Kraków or Wrocław
+```
+
+Parameters:
+- `categories`: ["Marketing"]
+- `country`: "PL"
+- `cities`: ["Kraków", "Wrocław"]
+
+---
+
+### Remote Jobs
+
+```
+Show me remote senior developer positions
+```
+
+Parameters:
+- `query`: "developer"
+- `experience_levels`: ["senior"]
+- `is_remote`: true
+- `work_modes`: ["remote"]
+
+---
+
+## Advanced Filtering
+
+### Salary Filter
+
+```
+Find IT jobs in Germany with minimum salary 5000 EUR
+```
+
+Parameters:
+- `categories`: ["IT"]
+- `country`: "DE"
+- `min_salary`: 5000
+
+---
+
+### Multiple Criteria
+
+```
+Search for senior B2B Python developer positions in Warsaw, remote work, minimum 20000 PLN
+```
+
+Parameters:
+- `query`: "python developer"
+- `experience_levels`: ["senior"]
+- `contract_types`: ["B2B"]
+- `cities`: ["Warszawa"]
+- `work_modes`: ["remote"]
+- `min_salary`: 20000
+- `country`: "PL"
+
+---
+
+### Experience Level
+
+```
+Find junior frontend developer jobs
+```
+
+Parameters:
+- `query`: "frontend developer"
+- `experience_levels`: ["junior"]
+
+---
+
+## Market Analysis
+
+### Category Overview
+
+```
+What job categories are available?
+```
+
+Uses `available_categories` tool to show all categories with counts.
+
+---
+
+### Regional Statistics
+
+```
+How many IT jobs are available in each country?
+```
+
+Combines:
+1. `available_countries` - get all countries
+2. `offers_count` for each country with `categories`: ["IT"]
+
+---
+
+### Trending Categories
+
+```
+Which job categories have the most offers?
+```
+
+Uses `available_categories` and sorts by count.
+
+---
+
+## Specific Job Details
+
+### Get Full Job Description
+
+```
+Show me details for job: python-developer-techcorp-123
+```
+
+Uses `offer` tool with:
+- `slug`: "python-developer-techcorp-123"
+
+Returns complete job information including:
+- Full description
+- Requirements
+- Benefits
+- Company info
+- AI-generated insights
+
+---
+
+## Complex Queries
+
+### Cross-Country Search
+
+```
+Find CTO positions in Poland or Germany
+```
+
+Two separate searches:
+1. `country`: "PL", `query`: "CTO"
+2. `country`: "DE", `query`: "CTO"
+
+Combined and deduplicated results.
+
+---
+
+### Hybrid Work Analysis
+
+```
+How many senior IT jobs offer hybrid work in Warsaw?
+```
+
+Uses `offers_count` with:
+- `categories`: ["IT"]
+- `experience_levels`: ["senior"]
+- `work_modes`: ["hybrid"]
+- `cities`: ["Warszawa"]
+- `country`: "PL"
+
+---
+
+### Salary Comparison
+
+```
+Compare average Python developer salaries in Warsaw vs Kraków
+```
+
+Multiple `search` calls:
+1. Warsaw: `query`: "python", `cities`: ["Warszawa"]
+2. Kraków: `query`: "python", `cities`: ["Kraków"]
+
+Analyze salary ranges from results.
+
+---
+
+## Workflow Examples
+
+### Daily Job Alerts
+
+Set up AI assistant to check daily:
+
+```
+Check for new senior Python jobs in Warsaw that were posted today
+```
+
+Uses:
+- `search` with appropriate filters
+- Assistant can track previously seen offers
+- Notify only about new positions
+
+---
+
+### Career Path Exploration
+
+```
+Show me career progression from junior to senior developer positions
+```
+
+Multiple searches:
+1. `experience_levels`: ["junior"]
+2. `experience_levels`: ["mid"]
+3. `experience_levels`: ["senior"]
+
+Compare requirements and salaries.
+
+---
+
+### Company Research
+
+```
+What types of positions does TechCorp offer?
+```
+
+Uses:
+- `search` with `companies`: ["TechCorp"]
+- Group results by category
+- Analyze common requirements
+
+---
+
+## Tips for Better Results
+
+<Tip>
+**Use natural language** - The semantic search understands context, so "looking for a leadership role in technology" works as well as "CTO position".
+</Tip>
+
+<Tip>
+**Combine filters** - More specific filters lead to more relevant results. Don't hesitate to use multiple criteria.
+</Tip>
+
+<Tip>
+**Check market data first** - Use `available_*` tools to see what values are valid for filters before searching.
+</Tip>
+
+<Warning>
+**Mind the limit** - Default is 20 results, max is 100. For broader searches, use pagination with `offset`.
+</Warning>
+
+## Sample Conversations
+
+### Job Seeker
+
+<Steps>
+  <Step title="Initial Search">
+    "I'm looking for Python developer jobs in Warsaw"
+  </Step>
+  <Step title="Refine">
+    "Show me only senior positions with remote work"
+  </Step>
+  <Step title="Details">
+    "Tell me more about the first job in the list"
+  </Step>
+  <Step title="Compare">
+    "What's the salary range for similar positions in Kraków?"
+  </Step>
+</Steps>
+
+### Recruiter
+
+<Steps>
+  <Step title="Market Overview">
+    "How many IT jobs are currently available in Poland?"
+  </Step>
+  <Step title="Category Breakdown">
+    "What are the most popular IT subcategories?"
+  </Step>
+  <Step title="Salary Analysis">
+    "What's the average salary for senior developers in Warsaw?"
+  </Step>
+  <Step title="Competition">
+    "How many companies are hiring for similar positions?"
+  </Step>
+</Steps>
+
+### Developer
+
+<Steps>
+  <Step title="Skill Check">
+    "Find jobs that require Python and Django"
+  </Step>
+  <Step title="Location">
+    "Which cities have the most of these positions?"
+  </Step>
+  <Step title="Compensation">
+    "Show me only B2B contracts with salary above 20000"
+  </Step>
+  <Step title="Apply">
+    "Give me the application link for the top result"
+  </Step>
+</Steps>
+
+## Integration Patterns
+
+### Slack Bot
+
+Create a Slack bot that queries Hexjobs:
+
+```
+/jobs find python warsaw remote
+```
+
+Bot uses MCP to search and format results for Slack.
+
+---
+
+### Email Digest
+
+Weekly email with matching jobs:
+
+1. Store user preferences (skills, location, salary)
+2. Weekly cron job queries via MCP
+3. Format and send email with new matches
+
+---
+
+### Custom Dashboard
+
+Build a dashboard showing:
+- Job count trends by category
+- Salary ranges over time
+- Top hiring companies
+- Regional distribution
+
+All data fetched via MCP tools.

@@ -1,0 +1,348 @@
+---
+title: "Available Tools"
+description: "MCP tools provided by Hexjobs server"
+---
+
+# Available MCP Tools
+
+The Hexjobs MCP server provides several tools for searching and analyzing job offers. All tools return structured JSON data and handle errors gracefully.
+
+## Core Search Tools
+
+### `search`
+
+Main search tool with advanced filtering and AI-powered semantic search.
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `query` | string | No | Search query (e.g., "python developer", "CTO") |
+| `country` | string | No | Country code: "PL", "DE", "AT", "UA" |
+| `cities` | array[string] | No | Filter by cities (e.g., ["Warszawa", "Kraków"]) |
+| `categories` | array[string] | No | Job categories (e.g., ["IT", "Marketing"]) |
+| `experience_levels` | array[string] | No | Experience levels (e.g., ["junior", "mid", "senior"]) |
+| `contract_types` | array[string] | No | Contract types (e.g., ["B2B", "UoP"]) |
+| `work_modes` | array[string] | No | Work modes (e.g., ["office", "hybrid", "remote"]) |
+| `companies` | array[string] | No | Filter by company names |
+| `is_remote` | boolean | No | Filter remote jobs only |
+| `min_salary` | float | No | Minimum salary threshold |
+| `limit` | integer | No | Number of results (max 100, default 20) |
+| `offset` | integer | No | Pagination offset (default 0) |
+
+**Returns:**
+
+```json
+{
+  "offers": [
+    {
+      "slug": "python-developer-company-123",
+      "title": "Senior Python Developer",
+      "company": {
+        "name": "Tech Company",
+        "logo": "https://..."
+      },
+      "location": {
+        "city": "Warszawa",
+        "country": "Poland"
+      },
+      "category": "IT",
+      "experienceLevels": ["senior"],
+      "contractTypes": ["B2B", "UoP"],
+      "workModes": ["hybrid", "remote"],
+      "salary": {
+        "min": 15000,
+        "max": 25000,
+        "currency": "PLN"
+      },
+      "publishedAt": "2026-01-15T10:00:00Z",
+      "url": "https://hexjobs.com/offer/python-developer-company-123"
+    }
+  ],
+  "total": 156,
+  "limit": 20,
+  "offset": 0
+}
+```
+
+**Example Usage:**
+
+```
+Search for senior Python jobs in Warsaw with minimum salary 15000 PLN
+```
+
+---
+
+### `offer`
+
+Get detailed information about a specific job offer.
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `slug` | string | Yes | Job offer slug (unique identifier) |
+
+**Returns:**
+
+```json
+{
+  "slug": "python-developer-company-123",
+  "title": "Senior Python Developer",
+  "description": "Full job description...",
+  "requirements": "Job requirements...",
+  "responsibilities": "Main responsibilities...",
+  "benefits": "Company benefits...",
+  "company": {
+    "name": "Tech Company",
+    "description": "Company info...",
+    "logo": "https://...",
+    "website": "https://..."
+  },
+  "location": {
+    "city": "Warszawa",
+    "country": "Poland",
+    "address": "Street 123",
+    "isRemote": true
+  },
+  "salary": {
+    "min": 15000,
+    "max": 25000,
+    "currency": "PLN"
+  },
+  "insights": {
+    "summary": "AI-generated summary",
+    "keySkills": ["Python", "Django", "PostgreSQL"],
+    "suitableFor": "Experienced backend developers"
+  }
+}
+```
+
+---
+
+### `offers_count`
+
+Get total count of job offers matching specified filters without returning actual offers.
+
+**Parameters:**
+
+Same as `search` tool (except `limit` and `offset`)
+
+**Returns:**
+
+```json
+{
+  "count": 156,
+  "query": "python developer",
+  "filters": {
+    "country": "PL",
+    "cities": ["Warszawa"]
+  }
+}
+```
+
+---
+
+## Market Data Tools
+
+### `available_categories`
+
+Get all available job categories with counts.
+
+**Parameters:** None
+
+**Returns:**
+
+```json
+{
+  "categories": [
+    {
+      "name": "IT",
+      "count": 5432
+    },
+    {
+      "name": "Marketing",
+      "count": 1234
+    }
+  ],
+  "total": 15
+}
+```
+
+---
+
+### `available_countries`
+
+Get all available countries/regions with job counts.
+
+**Parameters:** None
+
+**Returns:**
+
+```json
+{
+  "countries": [
+    {
+      "name": "PL",
+      "count": 8765
+    },
+    {
+      "name": "DE",
+      "count": 3456
+    }
+  ],
+  "total": 4
+}
+```
+
+---
+
+### `available_experience_levels`
+
+Get all available experience levels with counts.
+
+**Parameters:** None
+
+**Returns:**
+
+```json
+{
+  "experience_levels": [
+    {
+      "name": "junior",
+      "count": 1234
+    },
+    {
+      "name": "mid",
+      "count": 4567
+    },
+    {
+      "name": "senior",
+      "count": 2345
+    }
+  ],
+  "total": 5
+}
+```
+
+---
+
+### `available_contract_types`
+
+Get all available contract types with counts.
+
+**Parameters:** None
+
+**Returns:**
+
+```json
+{
+  "contract_types": [
+    {
+      "name": "B2B",
+      "count": 4567
+    },
+    {
+      "name": "UoP",
+      "count": 3456
+    }
+  ],
+  "total": 4
+}
+```
+
+---
+
+### `available_work_modes`
+
+Get all available work modes with counts.
+
+**Parameters:** None
+
+**Returns:**
+
+```json
+{
+  "work_modes": [
+    {
+      "name": "remote",
+      "count": 3456
+    },
+    {
+      "name": "hybrid",
+      "count": 4567
+    },
+    {
+      "name": "office",
+      "count": 1234
+    }
+  ],
+  "total": 3
+}
+```
+
+---
+
+## Best Practices
+
+### Efficient Searching
+
+1. **Use specific queries** - More specific queries return better results
+2. **Combine filters** - Use multiple filters to narrow down results
+3. **Paginate large results** - Use `limit` and `offset` for large result sets
+4. **Check counts first** - Use `offers_count` before fetching full results
+
+### Query Examples
+
+<CodeGroup>
+
+```plaintext Simple Query
+Find Python jobs
+```
+
+```plaintext With Filters
+Find senior Python jobs in Warsaw with remote work option
+```
+
+```plaintext Multiple Cities
+Search for Marketing positions in Kraków or Wrocław
+```
+
+```plaintext Salary Filter
+Find IT jobs with minimum salary 20000 in Germany
+```
+
+</CodeGroup>
+
+### Error Handling
+
+All tools return user-friendly error messages:
+
+```json
+{
+  "error": "Unable to process search request. Please try again or adjust your filters.",
+  "offers": [],
+  "total": 0
+}
+```
+
+### Rate Limiting
+
+The MCP server applies standard fair-use rate limiting:
+- Maximum 100 results per request
+- Reasonable request frequency expected
+- No hard limits for normal usage
+
+## Tips & Tricks
+
+<Tip>
+Use the market data tools (`available_categories`, `available_countries`, etc.) to discover what filters are available before constructing complex queries.
+</Tip>
+
+<Warning>
+The `limit` parameter is capped at 100 results per request. For larger datasets, use pagination with `offset`.
+</Warning>
+
+<Info>
+Semantic search is automatically enabled when using the `search` tool with a query string. It understands context and synonyms.
+</Info>

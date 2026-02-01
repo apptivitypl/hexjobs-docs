@@ -1,0 +1,494 @@
+---
+title: "Troubleshooting"
+description: "Common issues and solutions for Hexjobs MCP server"
+---
+
+# Troubleshooting
+
+Common issues and their solutions when using the Hexjobs MCP server.
+
+## Connection Issues
+
+### Server Not Responding
+
+**Symptoms:**
+- AI assistant can't connect to MCP server
+- Timeout errors
+- Connection refused
+
+**Solutions:**
+
+<AccordionGroup>
+  <Accordion title="Check Server URL">
+    Ensure you're using the correct endpoint:
+    ```
+    https://mcp.hexjobs.com/mcp
+    ```
+    
+    Common mistakes:
+    - Missing `https://`
+    - Typo in domain name
+    - Extra trailing slash
+  </Accordion>
+
+  <Accordion title="Verify Configuration">
+    **Claude Desktop** - Check `claude_desktop_config.json`:
+    ```json
+    {
+      "mcpServers": {
+        "hexjobs": {
+          "url": "https://mcp.hexjobs.com/mcp"
+        }
+      }
+    }
+    ```
+    
+    **Location:**
+    - macOS: `~/Library/Application Support/Claude/`
+    - Windows: `%APPDATA%/Claude/`
+  </Accordion>
+
+  <Accordion title="Restart Your Client">
+    After configuration changes:
+    1. Completely quit your AI assistant
+    2. Wait 5 seconds
+    3. Restart the application
+    4. Test connection
+  </Accordion>
+
+  <Accordion title="Check Network">
+    - Ensure you have internet connection
+    - Try accessing https://mcp.hexjobs.com/mcp in browser
+    - Check if firewall is blocking the connection
+    - Try disabling VPN temporarily
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Tools Not Available
+
+**Symptoms:**
+- MCP server connects but tools don't appear
+- Assistant says "I don't have access to job search tools"
+
+**Solutions:**
+
+1. **Verify Connection Status**
+   - Check if MCP server shows as connected in your client
+   - Look for green indicator or "connected" status
+
+2. **Restart Client**
+   - Completely quit and restart your AI assistant
+   - Wait for MCP initialization
+
+3. **Check Logs**
+   - Claude Desktop: Look for errors in dev console
+   - LM Studio: Check MCP server logs
+   - Cursor: Check output panel
+
+4. **Reinstall Configuration**
+   - Remove server from config
+   - Save file
+   - Re-add server configuration
+   - Restart client
+
+---
+
+## Search Issues
+
+### No Results Found
+
+**Symptoms:**
+- Search returns empty results
+- `"total": 0` in response
+
+**Solutions:**
+
+<Steps>
+  <Step title="Broaden Your Query">
+    Try less specific search terms:
+    - Instead of "Senior Python Django Developer", try "Python Developer"
+    - Remove very specific requirements
+  </Step>
+
+  <Step title="Check Filters">
+    Verify your filters aren't too restrictive:
+    - Remove salary filters temporarily
+    - Try without city filter
+    - Remove experience level filter
+  </Step>
+
+  <Step title="Use Market Data Tools">
+    Check what's available:
+    ```
+    What job categories are available?
+    How many jobs in Poland?
+    ```
+  </Step>
+
+  <Step title="Try Different Region">
+    Job availability varies by country:
+    - Poland (PL) has most offers
+    - Germany (DE) has many offers
+    - Austria (AT) has fewer offers
+  </Step>
+</Steps>
+
+---
+
+### Unexpected Results
+
+**Symptoms:**
+- Results don't match your query
+- Irrelevant job offers returned
+
+**Solutions:**
+
+1. **Be More Specific**
+   ```
+   ❌ "Find jobs"
+   ✅ "Find Python developer jobs in Warsaw"
+   ```
+
+2. **Use Filters**
+   ```
+   ❌ "IT jobs"
+   ✅ "IT jobs in Poland, senior level, remote work"
+   ```
+
+3. **Check Spelling**
+   - City names: "Warszawa" not "Warsaw" for Polish listings
+   - Category names: Use exact names from `available_categories`
+
+4. **Understand Semantic Search**
+   - Search finds similar terms automatically
+   - "CTO" also finds "Chief Technology Officer", "Technical Director"
+   - This is a feature, not a bug!
+
+---
+
+## Configuration Problems
+
+### Claude Desktop Not Loading Config
+
+**Symptoms:**
+- Changes to config file don't take effect
+- Old configuration still active
+
+**Solutions:**
+
+<CodeGroup>
+
+```bash macOS
+# 1. Quit Claude completely
+killall Claude
+
+# 2. Verify config file location
+cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
+
+# 3. Check JSON syntax
+python3 -m json.tool ~/Library/Application\ Support/Claude/claude_desktop_config.json
+
+# 4. Restart Claude
+open -a Claude
+```
+
+```powershell Windows
+# 1. Quit Claude completely (Task Manager)
+
+# 2. Verify config file
+type "%APPDATA%\Claude\claude_desktop_config.json"
+
+# 3. Check JSON syntax (in PowerShell)
+Get-Content "$env:APPDATA\Claude\claude_desktop_config.json" | ConvertFrom-Json
+
+# 4. Restart Claude
+```
+
+</CodeGroup>
+
+---
+
+### JSON Syntax Errors
+
+**Symptoms:**
+- Config file not parsed
+- Client won't start
+
+**Common Mistakes:**
+
+<CodeGroup>
+
+```json ❌ Missing Comma
+{
+  "mcpServers": {
+    "hexjobs": {
+      "url": "https://mcp.hexjobs.com/mcp"
+    }  // Missing comma if more entries follow
+    "other": {
+      "url": "..."
+    }
+  }
+}
+```
+
+```json ❌ Trailing Comma
+{
+  "mcpServers": {
+    "hexjobs": {
+      "url": "https://mcp.hexjobs.com/mcp",
+    }, // Trailing comma not allowed
+  }
+}
+```
+
+```json ✅ Correct
+{
+  "mcpServers": {
+    "hexjobs": {
+      "url": "https://mcp.hexjobs.com/mcp"
+    },
+    "other": {
+      "url": "..."
+    }
+  }
+}
+```
+
+</CodeGroup>
+
+**Validation:**
+Use online JSON validator or command-line tool to check syntax.
+
+---
+
+## Performance Issues
+
+### Slow Responses
+
+**Symptoms:**
+- Searches take long time
+- Timeouts occur
+
+**Solutions:**
+
+1. **Reduce Result Set**
+   - Use smaller `limit` (default is 20)
+   - Add more specific filters
+   - Narrow down search criteria
+
+2. **Check Internet Speed**
+   - Test connection to server
+   - Try on different network
+
+3. **Simplify Query**
+   - Avoid very complex multi-filter searches
+   - Break into multiple simpler queries
+
+---
+
+### Rate Limiting
+
+**Symptoms:**
+- "Too many requests" errors
+- Temporary blocks
+
+**Solutions:**
+
+<Warning>
+Hexjobs MCP uses fair-use rate limiting. Avoid:
+- Rapid-fire automated requests
+- Bulk data scraping
+- Concurrent multiple clients with same config
+</Warning>
+
+**Best Practices:**
+- Add delays between automated requests
+- Use pagination instead of multiple searches
+- Cache results when possible
+- Use `offers_count` before fetching full data
+
+---
+
+## Data Issues
+
+### Missing Data Fields
+
+**Symptoms:**
+- Some job offers missing salary info
+- No company logo
+- Incomplete descriptions
+
+**Explanation:**
+
+Not all job postings include complete information:
+- Salary: Many companies don't publish salary ranges
+- Logos: Some companies don't provide logos
+- Descriptions: Quality varies by source
+
+This is expected behavior, not a bug.
+
+---
+
+### Outdated Listings
+
+**Symptoms:**
+- Old job postings returned
+- Expired positions
+
+**Note:**
+
+The MCP server filters out expired offers automatically. If you see old listings:
+1. They may still be active
+2. Company hasn't set expiration date
+3. Position may be evergreen (always hiring)
+
+To report outdated listing: [contact@hexjobs.com](mailto:contact@hexjobs.com)
+
+---
+
+## Client-Specific Issues
+
+### LM Studio
+
+**Problem:** Button doesn't work
+
+**Solution:**
+- Ensure LM Studio is up to date
+- Try manual configuration instead
+- Check LM Studio MCP documentation
+
+---
+
+### ChatGPT Desktop
+
+**Problem:** Config file location unclear
+
+**Solution:**
+Create directory if it doesn't exist:
+
+```bash macOS
+mkdir -p ~/Library/Application\ Support/OpenAI/ChatGPT
+```
+
+```powershell Windows
+New-Item -ItemType Directory -Force -Path "$env:APPDATA\OpenAI\ChatGPT"
+```
+
+---
+
+### Cursor
+
+**Problem:** MCP settings not visible
+
+**Solution:**
+1. Update Cursor to latest version
+2. Enable Features → Model Context Protocol in settings
+3. Restart Cursor
+
+---
+
+### Cline
+
+**Problem:** Server shows as disconnected
+
+**Solution:**
+1. Check Cline extension is latest version
+2. Reload VS Code window
+3. Check VS Code output panel for errors
+
+---
+
+## Getting Help
+
+### Before Contacting Support
+
+<Steps>
+  <Step title="Check This Guide">
+    Review relevant troubleshooting sections above
+  </Step>
+  
+  <Step title="Verify Configuration">
+    Double-check your config file syntax and server URL
+  </Step>
+  
+  <Step title="Test Basic Functionality">
+    Try simple query like "Find IT jobs in Poland"
+  </Step>
+  
+  <Step title="Check Server Status">
+    Visit https://mcp.hexjobs.com/mcp in browser to verify it's online
+  </Step>
+  
+  <Step title="Restart Everything">
+    Restart your AI assistant client completely
+  </Step>
+</Steps>
+
+---
+
+### Contact Support
+
+If issues persist, contact us with:
+
+📧 **Email:** [contact@hexjobs.com](mailto:contact@hexjobs.com)
+
+**Include:**
+- Client name and version (Claude Desktop 1.2.3, etc.)
+- Operating system (macOS 14.0, Windows 11, etc.)
+- Error messages (exact text or screenshots)
+- Configuration file (remove sensitive data)
+- Steps to reproduce the issue
+
+---
+
+### Common Solutions Summary
+
+<CardGroup cols={2}>
+  <Card title="90% of Issues" icon="rotate">
+    Fixed by restarting your AI assistant client
+  </Card>
+  
+  <Card title="Config Problems" icon="file-code">
+    Check JSON syntax and file location
+  </Card>
+  
+  <Card title="No Results" icon="filter">
+    Remove filters and broaden search
+  </Card>
+  
+  <Card title="Slow Performance" icon="gauge">
+    Reduce result limit and add filters
+  </Card>
+</CardGroup>
+
+---
+
+## Known Limitations
+
+<Warning>
+**Current Limitations:**
+- Maximum 100 results per request
+- No real-time job alerts (polling required)
+- No application submission via MCP
+- Fair-use rate limiting applies
+</Warning>
+
+These are intentional design decisions, not bugs.
+
+---
+
+## Feature Requests
+
+Have suggestions for improvements?
+
+We'd love to hear from you:
+- 📧 Email: [contact@hexjobs.com](mailto:contact@hexjobs.com)
+- 🐙 GitHub: [github.com/apptivitypl](https://github.com/apptivitypl)
+
+Popular requests:
+- ✅ Multi-region search (implemented!)
+- ✅ Semantic search (implemented!)
+- 🔄 Real-time webhooks (planned)
+- 🔄 Application tracking (planned)
