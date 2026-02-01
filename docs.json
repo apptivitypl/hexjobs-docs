@@ -18,7 +18,19 @@
         }
       ]
     },
-    "groups": []
+    "products": [
+      {
+        "product": "MCP",
+        "tabs": [
+          {
+            "tab": "Home",
+            "pages": [
+              "home/mcp/introduction"
+            ]
+          }
+        ]
+      }
+    ]
   },
   "logo": "/logo/light.svg",
   "navbar": {
