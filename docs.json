@@ -9,15 +9,6 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Main Page (hexjobs.com)",
-          "icon": "newspaper",
-          "href": "https://hexjobs.com/"
-        }
-      ]
-    },
     "tabs": [
       {
         "tab": "Documentation",
