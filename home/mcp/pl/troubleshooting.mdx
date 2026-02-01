@@ -1,0 +1,494 @@
+---
+title: "Rozwiązywanie problemów"
+description: "Typowe problemy i rozwiązania dla serwera Hexjobs MCP"
+---
+
+# Rozwiązywanie problemów
+
+Typowe problemy i ich rozwiązania przy korzystaniu z serwera Hexjobs MCP.
+
+## Problemy z połączeniem
+
+### Serwer nie odpowiada
+
+**Objawy:**
+- Asystent AI nie może się połączyć z serwerem MCP
+- Błędy timeout
+- Odmowa połączenia
+
+**Rozwiązania:**
+
+<AccordionGroup>
+  <Accordion title="Sprawdź URL serwera">
+    Upewnij się, że używasz poprawnego endpointu:
+    ```
+    https://mcp.hexjobs.com/mcp
+    ```
+    
+    Częste błędy:
+    - Brak `https://`
+    - Literówka w nazwie domeny
+    - Dodatkowy slash na końcu
+  </Accordion>
+
+  <Accordion title="Zweryfikuj konfigurację">
+    **Claude Desktop** - sprawdź `claude_desktop_config.json`:
+    ```json
+    {
+      "mcpServers": {
+        "hexjobs": {
+          "url": "https://mcp.hexjobs.com/mcp"
+        }
+      }
+    }
+    ```
+    
+    **Lokalizacja:**
+    - macOS: `~/Library/Application Support/Claude/`
+    - Windows: `%APPDATA%/Claude/`
+  </Accordion>
+
+  <Accordion title="Uruchom ponownie klienta">
+    Po zmianach w konfiguracji:
+    1. Całkowicie zamknij swojego asystenta AI
+    2. Poczekaj 5 sekund
+    3. Uruchom ponownie aplikację
+    4. Przetestuj połączenie
+  </Accordion>
+
+  <Accordion title="Sprawdź sieć">
+    - Upewnij się, że masz połączenie z internetem
+    - Spróbuj otworzyć https://mcp.hexjobs.com/mcp w przeglądarce
+    - Sprawdź, czy firewall nie blokuje połączenia
+    - Spróbuj tymczasowo wyłączyć VPN
+  </Accordion>
+</AccordionGroup>
+
+---
+
+### Narzędzia są niedostępne
+
+**Objawy:**
+- Serwer MCP łączy się, ale narzędzia nie pojawiają się
+- Asystent mówi "Nie mam dostępu do narzędzi wyszukiwania ofert"
+
+**Rozwiązania:**
+
+1. **Zweryfikuj status połączenia**
+   - Sprawdź, czy serwer MCP pokazuje się jako połączony w twoim kliencie
+   - Szukaj zielonego wskaźnika lub statusu "połączony"
+
+2. **Uruchom ponownie klienta**
+   - Całkowicie zamknij i uruchom ponownie asystenta AI
+   - Poczekaj na inicjalizację MCP
+
+3. **Sprawdź logi**
+   - Claude Desktop: Szukaj błędów w konsoli deweloperskiej
+   - LM Studio: Sprawdź logi serwera MCP
+   - Cursor: Sprawdź panel wyjściowy
+
+4. **Przeinstaluj konfigurację**
+   - Usuń serwer z konfiguracji
+   - Zapisz plik
+   - Dodaj ponownie konfigurację serwera
+   - Uruchom ponownie klienta
+
+---
+
+## Problemy z wyszukiwaniem
+
+### Nie znaleziono wyników
+
+**Objawy:**
+- Wyszukiwanie zwraca puste wyniki
+- `"total": 0` w odpowiedzi
+
+**Rozwiązania:**
+
+<Steps>
+  <Step title="Rozszerz zapytanie">
+    Spróbuj mniej szczegółowych terminów wyszukiwania:
+    - Zamiast "Senior Python Django Developer", spróbuj "Python Developer"
+    - Usuń bardzo szczegółowe wymagania
+  </Step>
+
+  <Step title="Sprawdź filtry">
+    Zweryfikuj, czy twoje filtry nie są zbyt restrykcyjne:
+    - Usuń tymczasowo filtry wynagrodzeń
+    - Spróbuj bez filtra miasta
+    - Usuń filtr poziomu doświadczenia
+  </Step>
+
+  <Step title="Użyj narzędzi danych rynkowych">
+    Sprawdź co jest dostępne:
+    ```
+    Jakie kategorie ofert są dostępne?
+    Ile ofert w Polsce?
+    ```
+  </Step>
+
+  <Step title="Spróbuj innego regionu">
+    Dostępność ofert różni się według kraju:
+    - Polska (PL) ma najwięcej ofert
+    - Niemcy (DE) mają wiele ofert
+    - Austria (AT) ma mniej ofert
+  </Step>
+</Steps>
+
+---
+
+### Nieoczekiwane wyniki
+
+**Objawy:**
+- Wyniki nie pasują do zapytania
+- Zwrócone nieistotne oferty pracy
+
+**Rozwiązania:**
+
+1. **Bądź bardziej szczegółowy**
+   ```
+   ❌ "Znajdź oferty"
+   ✅ "Znajdź oferty programisty Python w Warszawie"
+   ```
+
+2. **Użyj filtrów**
+   ```
+   ❌ "Oferty IT"
+   ✅ "Oferty IT w Polsce, poziom senior, praca zdalna"
+   ```
+
+3. **Sprawdź pisownię**
+   - Nazwy miast: "Warszawa" nie "Warsaw" dla polskich ofert
+   - Nazwy kategorii: Użyj dokładnych nazw z `available_categories`
+
+4. **Zrozum wyszukiwanie semantyczne**
+   - Wyszukiwanie automatycznie znajduje podobne terminy
+   - "CTO" znajduje również "Chief Technology Officer", "Dyrektor Techniczny"
+   - To jest funkcja, nie błąd!
+
+---
+
+## Problemy z konfiguracją
+
+### Claude Desktop nie wczytuje konfiguracji
+
+**Objawy:**
+- Zmiany w pliku konfiguracyjnym nie działają
+- Stara konfiguracja nadal aktywna
+
+**Rozwiązania:**
+
+<CodeGroup>
+
+```bash macOS
+# 1. Zamknij całkowicie Claude
+killall Claude
+
+# 2. Zweryfikuj lokalizację pliku konfiguracyjnego
+cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
+
+# 3. Sprawdź składnię JSON
+python3 -m json.tool ~/Library/Application\ Support/Claude/claude_desktop_config.json
+
+# 4. Uruchom ponownie Claude
+open -a Claude
+```
+
+```powershell Windows
+# 1. Zamknij całkowicie Claude (Menedżer zadań)
+
+# 2. Zweryfikuj plik konfiguracyjny
+type "%APPDATA%\Claude\claude_desktop_config.json"
+
+# 3. Sprawdź składnię JSON (w PowerShell)
+Get-Content "$env:APPDATA\Claude\claude_desktop_config.json" | ConvertFrom-Json
+
+# 4. Uruchom ponownie Claude
+```
+
+</CodeGroup>
+
+---
+
+### Błędy składni JSON
+
+**Objawy:**
+- Plik konfiguracyjny nie jest parsowany
+- Klient nie uruchamia się
+
+**Częste błędy:**
+
+<CodeGroup>
+
+```json ❌ Brakujący przecinek
+{
+  "mcpServers": {
+    "hexjobs": {
+      "url": "https://mcp.hexjobs.com/mcp"
+    }  // Brakujący przecinek jeśli więcej wpisów następuje
+    "other": {
+      "url": "..."
+    }
+  }
+}
+```
+
+```json ❌ Końcowy przecinek
+{
+  "mcpServers": {
+    "hexjobs": {
+      "url": "https://mcp.hexjobs.com/mcp",
+    }, // Końcowy przecinek niedozwolony
+  }
+}
+```
+
+```json ✅ Poprawnie
+{
+  "mcpServers": {
+    "hexjobs": {
+      "url": "https://mcp.hexjobs.com/mcp"
+    },
+    "other": {
+      "url": "..."
+    }
+  }
+}
+```
+
+</CodeGroup>
+
+**Walidacja:**
+Użyj walidatora JSON online lub narzędzia wiersza poleceń, aby sprawdzić składnię.
+
+---
+
+## Problemy z wydajnością
+
+### Wolne odpowiedzi
+
+**Objawy:**
+- Wyszukiwania zajmują dużo czasu
+- Występują timeouty
+
+**Rozwiązania:**
+
+1. **Zmniejsz zestaw wyników**
+   - Użyj mniejszego `limit` (domyślnie jest 20)
+   - Dodaj bardziej szczegółowe filtry
+   - Zawęź kryteria wyszukiwania
+
+2. **Sprawdź prędkość internetu**
+   - Przetestuj połączenie z serwerem
+   - Spróbuj na innej sieci
+
+3. **Uprość zapytanie**
+   - Unikaj bardzo złożonych wyszukiwań z wieloma filtrami
+   - Podziel na wiele prostszych zapytań
+
+---
+
+### Limity zapytań
+
+**Objawy:**
+- Błędy "Zbyt wiele zapytań"
+- Tymczasowe blokady
+
+**Rozwiązania:**
+
+<Warning>
+Hexjobs MCP używa limitów fair-use. Unikaj:
+- Szybkich automatycznych zapytań
+- Masowego pobierania danych
+- Jednoczesnych wielu klientów z tą samą konfiguracją
+</Warning>
+
+**Najlepsze praktyki:**
+- Dodaj opóźnienia między automatycznymi zapytaniami
+- Użyj paginacji zamiast wielu wyszukiwań
+- Cachuj wyniki gdy to możliwe
+- Użyj `offers_count` przed pobieraniem pełnych danych
+
+---
+
+## Problemy z danymi
+
+### Brakujące pola danych
+
+**Objawy:**
+- Niektóre oferty pracy nie mają informacji o wynagrodzeniu
+- Brak logo firmy
+- Niekompletne opisy
+
+**Wyjaśnienie:**
+
+Nie wszystkie ogłoszenia o pracę zawierają pełne informacje:
+- Wynagrodzenie: wiele firm nie publikuje przedziałów wynagrodzeń
+- Loga: niektóre firmy nie dostarczają log
+- Opisy: jakość różni się w zależności od źródła
+
+To oczekiwane zachowanie, nie błąd.
+
+---
+
+### Nieaktualne oferty
+
+**Objawy:**
+- Zwrócone stare ogłoszenia o pracę
+- Wygasłe stanowiska
+
+**Uwaga:**
+
+Serwer MCP automatycznie filtruje wygasłe oferty. Jeśli widzisz stare oferty:
+1. Mogą być nadal aktywne
+2. Firma nie ustawiła daty wygaśnięcia
+3. Stanowisko może być evergreen (zawsze rekrutują)
+
+Aby zgłosić nieaktualną ofertę: [contact@hexjobs.com](mailto:contact@hexjobs.com)
+
+---
+
+## Problemy specyficzne dla klientów
+
+### LM Studio
+
+**Problem:** Przycisk nie działa
+
+**Rozwiązanie:**
+- Upewnij się, że LM Studio jest zaktualizowany
+- Spróbuj zamiast tego konfiguracji ręcznej
+- Sprawdź dokumentację MCP w LM Studio
+
+---
+
+### ChatGPT Desktop
+
+**Problem:** Niejasna lokalizacja pliku konfiguracyjnego
+
+**Rozwiązanie:**
+Utwórz katalog, jeśli nie istnieje:
+
+```bash macOS
+mkdir -p ~/Library/Application\ Support/OpenAI/ChatGPT
+```
+
+```powershell Windows
+New-Item -ItemType Directory -Force -Path "$env:APPDATA\OpenAI\ChatGPT"
+```
+
+---
+
+### Cursor
+
+**Problem:** Ustawienia MCP niewidoczne
+
+**Rozwiązanie:**
+1. Zaktualizuj Cursor do najnowszej wersji
+2. Włącz Features → Model Context Protocol w ustawieniach
+3. Uruchom ponownie Cursor
+
+---
+
+### Cline
+
+**Problem:** Serwer pokazuje się jako rozłączony
+
+**Rozwiązanie:**
+1. Sprawdź, czy rozszerzenie Cline jest w najnowszej wersji
+2. Przeładuj okno VS Code
+3. Sprawdź panel wyjściowy VS Code pod kątem błędów
+
+---
+
+## Uzyskiwanie pomocy
+
+### Przed skontaktowaniem się ze wsparciem
+
+<Steps>
+  <Step title="Sprawdź ten przewodnik">
+    Przejrzyj odpowiednie sekcje rozwiązywania problemów powyżej
+  </Step>
+  
+  <Step title="Zweryfikuj konfigurację">
+    Dokładnie sprawdź składnię pliku konfiguracyjnego i URL serwera
+  </Step>
+  
+  <Step title="Przetestuj podstawową funkcjonalność">
+    Spróbuj prostego zapytania jak "Znajdź oferty IT w Polsce"
+  </Step>
+  
+  <Step title="Sprawdź status serwera">
+    Odwiedź https://mcp.hexjobs.com/mcp w przeglądarce, aby zweryfikować, czy działa
+  </Step>
+  
+  <Step title="Uruchom ponownie wszystko">
+    Uruchom ponownie całkowicie klienta asystenta AI
+  </Step>
+</Steps>
+
+---
+
+### Kontakt ze wsparciem
+
+Jeśli problemy pozostają, skontaktuj się z nami podając:
+
+**Email:** [contact@hexjobs.com](mailto:contact@hexjobs.com)
+
+**Dołącz:**
+- Nazwa klienta i wersja (Claude Desktop 1.2.3, itd.)
+- System operacyjny (macOS 14.0, Windows 11, itd.)
+- Komunikaty błędów (dokładny tekst lub zrzuty ekranu)
+- Plik konfiguracyjny (usuń dane wrażliwe)
+- Kroki do odtworzenia problemu
+
+---
+
+### Podsumowanie typowych rozwiązań
+
+<CardGroup cols={2}>
+  <Card title="90% problemów" icon="rotate">
+    Naprawione przez ponowne uruchomienie klienta asystenta AI
+  </Card>
+  
+  <Card title="Problemy z konfiguracją" icon="file-code">
+    Sprawdź składnię JSON i lokalizację pliku
+  </Card>
+  
+  <Card title="Brak wyników" icon="filter">
+    Usuń filtry i rozszerz wyszukiwanie
+  </Card>
+  
+  <Card title="Niska wydajność" icon="gauge">
+    Zmniejsz limit wyników i dodaj filtry
+  </Card>
+</CardGroup>
+
+---
+
+## Znane ograniczenia
+
+<Warning>
+**Obecne ograniczenia:**
+- Maksymalnie 100 wyników na zapytanie
+- Brak powiadomień o ofertach w czasie rzeczywistym (wymagane odpytywanie)
+- Brak możliwości aplikowania przez MCP
+- Obowiązują limity fair-use
+</Warning>
+
+To są celowe decyzje projektowe, nie błędy.
+
+---
+
+## Prośby o funkcje
+
+Masz sugestie ulepszeń?
+
+Chętnie Cię wysłuchamy:
+- Email: [contact@hexjobs.com](mailto:contact@hexjobs.com)
+- GitHub: [github.com/apptivitypl](https://github.com/apptivitypl)
+
+Popularne prośby:
+- Wyszukiwanie wieloregionalne (zaimplementowane!)
+- Wyszukiwanie semantyczne (zaimplementowane!)
+- Webhooki w czasie rzeczywistym (planowane)
+- Śledzenie aplikacji (planowane)

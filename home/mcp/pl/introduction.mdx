@@ -1,0 +1,164 @@
+---
+title: "Wprowadzenie"
+---
+
+# Serwer MCP Hexjobs
+
+Serwer Hexjobs MCP (Model Context Protocol) umożliwia asystentom AI wyszukiwanie i interakcję z ofertami pracy bezpośrednio z narzędzi AI takich jak Claude Desktop, Cline czy innych klientów kompatybilnych z MCP.
+
+## Czym jest MCP?
+
+Model Context Protocol to otwarty standard pozwalający asystentom AI na bezpieczne łączenie się z zewnętrznymi źródłami danych i narzędziami. Dzięki serwerowi Hexjobs MCP, twój asystent AI zyskuje dostęp do naszej platformy wyszukiwania ofert pracy.
+
+## Jak zacząć
+
+### Endpoint serwera
+
+Połącz swojego klienta MCP z:
+```
+https://mcp.hexjobs.com/mcp
+```
+
+### Wspierane klienty
+
+- **Claude Desktop** - dodaj konfigurację serwera do `claude_desktop_config.json`
+- **Cline** - skonfiguruj w ustawieniach MCP
+- **Dowolny klient kompatybilny z MCP** - użyj transportu HTTPS
+
+## Funkcje
+
+Serwer Hexjobs MCP zapewnia:
+
+- **Wyszukiwanie ofert pracy napędzane AI** - szukaj używając zapytań w języku naturalnym z semantycznym zrozumieniem
+- **Zaawansowane filtrowanie** - filtruj według lokalizacji, kategorii, poziomu doświadczenia, wynagrodzenia i więcej
+- **Wsparcie dla wielu regionów** - wyszukuj w Polsce, Niemczech, Austrii
+- **Szczegółowe informacje o ofertach** - uzyskaj kompletne opisy stanowisk i wymagania
+- **Analiza rynku** - dostęp do zagregowanych statystyk o dostępnych stanowiskach
+
+## Przykłady konfiguracji
+
+### LM Studio
+
+Kliknij przycisk poniżej, aby automatycznie dodać serwer Hexjobs MCP do LM Studio:
+
+[![Add MCP Server hexjobs to LM Studio](https://files.lmstudio.ai/deeplink/mcp-install-dark.svg)](https://lmstudio.ai/install-mcp?name=hexjobs&config=eyJ1cmwiOiJodHRwczovL21jcC5oZXhqb2JzLmNvbS9tY3AifQ%3D%3D)
+
+Lub dodaj ręcznie w ustawieniach MCP w LM Studio:
+
+```json
+{
+  "mcpServers": {
+    "hexjobs": {
+      "url": "https://mcp.hexjobs.com/mcp"
+    }
+  }
+}
+```
+
+### Claude Desktop
+
+#### Opcja 1: Interfejs Connectors (Zalecane)
+
+1. Otwórz Claude Desktop i przejdź do **Settings** (Ustawienia)
+2. Przejdź do sekcji **Connectors**
+3. Kliknij **Add custom connector**
+4. Wypełnij dane:
+   - **Name** (Nazwa): `hexjobs`
+   - **URL**: `https://mcp.hexjobs.com/mcp`
+5. Kliknij **Add** (Dodaj)
+6. Włącz przełącznik dla connectora hexjobs
+
+<img src="/images/claude-connectors-settings.png" alt="Ustawienia Connectors w Claude Desktop" />
+
+<img src="/images/claude-connector-hexjobs.png" alt="Dodaj Connector Hexjobs" />
+
+<img src="/images/claude-connector-enable.png" alt="Włącz Connector Hexjobs" />
+
+#### Opcja 2: Ręczna edycja pliku konfiguracyjnego
+
+Alternatywnie, dodaj do `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) lub `%APPDATA%/Claude/claude_desktop_config.json` (Windows):
+
+```json
+{
+  "mcpServers": {
+    "hexjobs": {
+      "url": "https://mcp.hexjobs.com/mcp"
+    }
+  }
+}
+```
+
+Uruchom ponownie Claude Desktop po zapisaniu konfiguracji.
+
+### ChatGPT Desktop
+
+Dodaj do pliku konfiguracyjnego ChatGPT Desktop MCP znajdującego się w:
+- **macOS**: `~/Library/Application Support/OpenAI/ChatGPT/mcp_config.json`
+- **Windows**: `%APPDATA%/OpenAI/ChatGPT/mcp_config.json`
+
+```json
+{
+  "mcpServers": {
+    "hexjobs": {
+      "url": "https://mcp.hexjobs.com/mcp"
+    }
+  }
+}
+```
+
+### Cline (rozszerzenie VS Code)
+
+1. Otwórz VS Code z zainstalowanym rozszerzeniem Cline
+2. Przejdź do ustawień Cline
+3. Przejdź do sekcji MCP Servers
+4. Dodaj nowy serwer:
+   - **Nazwa**: Hexjobs
+   - **URL**: `https://mcp.hexjobs.com/mcp`
+
+### Cursor
+
+Dodaj do konfiguracji Cursor MCP w Ustawienia → Features → Model Context Protocol:
+
+```json
+{
+  "mcpServers": {
+    "hexjobs": {
+      "url": "https://mcp.hexjobs.com/mcp"
+    }
+  }
+}
+```
+
+### Własny klient MCP
+
+Dla każdego innego klienta kompatybilnego z MCP, skonfiguruj połączenie przez HTTPS:
+- **Transport**: HTTPS
+- **Endpoint**: `https://mcp.hexjobs.com/mcp`
+- **Wersja protokołu**: Najnowsza specyfikacja MCP
+
+## Przykłady użycia
+
+Po połączeniu możesz zapytać swojego asystenta AI:
+
+- "Znajdź oferty pracy dla programisty Python w Warszawie"
+- "Pokaż mi zdalne oferty dla seniorów w Niemczech"
+- "Jakie są najpopularniejsze kategorie ofert IT?"
+- "Szukaj stanowisk CTO z minimalnym wynagrodzeniem 20000"
+
+## Prywatność i bezpieczeństwo
+
+- Cała komunikacja wykorzystuje bezpieczny transport HTTPS
+- Nie wymaga uwierzytelniania dla publicznych danych o ofertach pracy
+- Dostęp tylko do odczytu - serwer nie może modyfikować danych
+- Brak zbierania danych osobowych
+
+## Szczegóły techniczne
+
+- **Protokół**: Model Context Protocol (MCP)
+- **Transport**: HTTPS
+- **Format odpowiedzi**: JSON
+- **Limity zapytań**: Obowiązują standardowe limity fair-use
+
+## Wsparcie
+
+W przypadku problemów lub pytań dotyczących serwera Hexjobs MCP, skontaktuj się z naszym zespołem wsparcia lub odwiedź naszą dokumentację.

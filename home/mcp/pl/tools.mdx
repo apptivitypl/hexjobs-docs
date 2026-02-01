@@ -1,0 +1,348 @@
+---
+title: "Dostępne narzędzia"
+description: "Narzędzia MCP dostarczone przez serwer Hexjobs"
+---
+
+# Dostępne narzędzia MCP
+
+Serwer Hexjobs MCP udostępnia kilka narzędzi do wyszukiwania i analizowania ofert pracy. Wszystkie narzędzia zwracają dane w strukturalnym formacie JSON i obsługują błędy w sposób bezpieczny.
+
+## Podstawowe narzędzia wyszukiwania
+
+### `search`
+
+Główne narzędzie wyszukiwania z zaawansowanym filtrowaniem i semantycznym wyszukiwaniem napędzanym AI.
+
+**Parametry:**
+
+| Parametr | Typ | Wymagany | Opis |
+|-----------|------|----------|-------------|
+| `query` | string | Nie | Zapytanie wyszukiwania (np. "programista python", "CTO") |
+| `country` | string | Nie | Kod kraju: "PL", "DE", "AT", "UA" |
+| `cities` | array[string] | Nie | Filtruj według miast (np. ["Warszawa", "Kraków"]) |
+| `categories` | array[string] | Nie | Kategorie ofert (np. ["IT", "Marketing"]) |
+| `experience_levels` | array[string] | Nie | Poziomy doświadczenia (np. ["junior", "mid", "senior"]) |
+| `contract_types` | array[string] | Nie | Typy umów (np. ["B2B", "UoP"]) |
+| `work_modes` | array[string] | Nie | Tryby pracy (np. ["office", "hybrid", "remote"]) |
+| `companies` | array[string] | Nie | Filtruj według nazw firm |
+| `is_remote` | boolean | Nie | Filtruj tylko oferty zdalne |
+| `min_salary` | float | Nie | Minimalne wynagrodzenie |
+| `limit` | integer | Nie | Liczba wyników (max 100, domyślnie 20) |
+| `offset` | integer | Nie | Offset paginacji (domyślnie 0) |
+
+**Zwraca:**
+
+```json
+{
+  "offers": [
+    {
+      "slug": "python-developer-company-123",
+      "title": "Senior Python Developer",
+      "company": {
+        "name": "Tech Company",
+        "logo": "https://..."
+      },
+      "location": {
+        "city": "Warszawa",
+        "country": "Poland"
+      },
+      "category": "IT",
+      "experienceLevels": ["senior"],
+      "contractTypes": ["B2B", "UoP"],
+      "workModes": ["hybrid", "remote"],
+      "salary": {
+        "min": 15000,
+        "max": 25000,
+        "currency": "PLN"
+      },
+      "publishedAt": "2026-01-15T10:00:00Z",
+      "url": "https://hexjobs.com/offer/python-developer-company-123"
+    }
+  ],
+  "total": 156,
+  "limit": 20,
+  "offset": 0
+}
+```
+
+**Przykład użycia:**
+
+```
+Wyszukaj oferty senior Python w Warszawie z minimalnym wynagrodzeniem 15000 PLN
+```
+
+---
+
+### `offer`
+
+Pobierz szczegółowe informacje o konkretnej ofercie pracy.
+
+**Parametry:**
+
+| Parametr | Typ | Wymagany | Opis |
+|-----------|------|----------|-------------|
+| `slug` | string | Tak | Slug oferty pracy (unikalny identyfikator) |
+
+**Zwraca:**
+
+```json
+{
+  "slug": "python-developer-company-123",
+  "title": "Senior Python Developer",
+  "description": "Pełny opis stanowiska...",
+  "requirements": "Wymagania...",
+  "responsibilities": "Główne obowiązki...",
+  "benefits": "Benefity firmowe...",
+  "company": {
+    "name": "Tech Company",
+    "description": "Informacje o firmie...",
+    "logo": "https://...",
+    "website": "https://..."
+  },
+  "location": {
+    "city": "Warszawa",
+    "country": "Poland",
+    "address": "Ulica 123",
+    "isRemote": true
+  },
+  "salary": {
+    "min": 15000,
+    "max": 25000,
+    "currency": "PLN"
+  },
+  "insights": {
+    "summary": "Podsumowanie wygenerowane przez AI",
+    "keySkills": ["Python", "Django", "PostgreSQL"],
+    "suitableFor": "Doświadczeni programiści backend"
+  }
+}
+```
+
+---
+
+### `offers_count`
+
+Pobierz całkowitą liczbę ofert pracy spełniających określone filtry bez zwracania faktycznych ofert.
+
+**Parametry:**
+
+Takie same jak narzędzie `search` (z wyjątkiem `limit` i `offset`)
+
+**Zwraca:**
+
+```json
+{
+  "count": 156,
+  "query": "python developer",
+  "filters": {
+    "country": "PL",
+    "cities": ["Warszawa"]
+  }
+}
+```
+
+---
+
+## Narzędzia do danych rynkowych
+
+### `available_categories`
+
+Pobierz wszystkie dostępne kategorie ofert pracy wraz z liczbą ofert.
+
+**Parametry:** Brak
+
+**Zwraca:**
+
+```json
+{
+  "categories": [
+    {
+      "name": "IT",
+      "count": 5432
+    },
+    {
+      "name": "Marketing",
+      "count": 1234
+    }
+  ],
+  "total": 15
+}
+```
+
+---
+
+### `available_countries`
+
+Pobierz wszystkie dostępne kraje/regiony wraz z liczbą ofert pracy.
+
+**Parametry:** Brak
+
+**Zwraca:**
+
+```json
+{
+  "countries": [
+    {
+      "name": "PL",
+      "count": 8765
+    },
+    {
+      "name": "DE",
+      "count": 3456
+    }
+  ],
+  "total": 4
+}
+```
+
+---
+
+### `available_experience_levels`
+
+Pobierz wszystkie dostępne poziomy doświadczenia wraz z liczbą ofert.
+
+**Parametry:** Brak
+
+**Zwraca:**
+
+```json
+{
+  "experience_levels": [
+    {
+      "name": "junior",
+      "count": 1234
+    },
+    {
+      "name": "mid",
+      "count": 4567
+    },
+    {
+      "name": "senior",
+      "count": 2345
+    }
+  ],
+  "total": 5
+}
+```
+
+---
+
+### `available_contract_types`
+
+Pobierz wszystkie dostępne typy umów wraz z liczbą ofert.
+
+**Parametry:** Brak
+
+**Zwraca:**
+
+```json
+{
+  "contract_types": [
+    {
+      "name": "B2B",
+      "count": 4567
+    },
+    {
+      "name": "UoP",
+      "count": 3456
+    }
+  ],
+  "total": 4
+}
+```
+
+---
+
+### `available_work_modes`
+
+Pobierz wszystkie dostępne tryby pracy wraz z liczbą ofert.
+
+**Parametry:** Brak
+
+**Zwraca:**
+
+```json
+{
+  "work_modes": [
+    {
+      "name": "remote",
+      "count": 3456
+    },
+    {
+      "name": "hybrid",
+      "count": 4567
+    },
+    {
+      "name": "office",
+      "count": 1234
+    }
+  ],
+  "total": 3
+}
+```
+
+---
+
+## Najlepsze praktyki
+
+### Efektywne wyszukiwanie
+
+1. **Używaj konkretnych zapytań** - bardziej szczegółowe zapytania zwracają lepsze wyniki
+2. **Łącz filtry** - użyj wielu filtrów, aby zawęzić wyniki
+3. **Używaj paginacji dla dużych wyników** - użyj `limit` i `offset` dla dużych zestawów wyników
+4. **Najpierw sprawdź liczby** - użyj `offers_count` przed pobieraniem pełnych wyników
+
+### Przykłady zapytań
+
+<CodeGroup>
+
+```plaintext Proste zapytanie
+Znajdź oferty Python
+```
+
+```plaintext Z filtrami
+Znajdź oferty senior Python w Warszawie z opcją pracy zdalnej
+```
+
+```plaintext Wiele miast
+Szukaj stanowisk Marketing w Krakowie lub Wrocławiu
+```
+
+```plaintext Filtr wynagrodzenia
+Znajdź oferty IT z minimalnym wynagrodzeniem 20000 w Niemczech
+```
+
+</CodeGroup>
+
+### Obsługa błędów
+
+Wszystkie narzędzia zwracają przyjazne dla użytkownika komunikaty błędów:
+
+```json
+{
+  "error": "Nie można przetworzyć zapytania wyszukiwania. Spróbuj ponownie lub dostosuj filtry.",
+  "offers": [],
+  "total": 0
+}
+```
+
+### Limity zapytań
+
+Serwer MCP stosuje standardowe limity fair-use:
+- Maksymalnie 100 wyników na zapytanie
+- Oczekiwana rozsądna częstotliwość zapytań
+- Brak twardych limitów dla normalnego użytkowania
+
+## Wskazówki i sztuczki
+
+<Tip>
+Użyj narzędzi danych rynkowych (`available_categories`, `available_countries` itp.), aby odkryć, jakie filtry są dostępne przed konstruowaniem złożonych zapytań.
+</Tip>
+
+<Warning>
+Parametr `limit` jest ograniczony do 100 wyników na zapytanie. Dla większych zestawów danych użyj paginacji z `offset`.
+</Warning>
+
+<Info>
+Wyszukiwanie semantyczne jest automatycznie włączane podczas używania narzędzia `search` z ciągiem zapytania. Rozumie kontekst i synonimy.
+</Info>

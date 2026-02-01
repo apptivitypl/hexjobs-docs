@@ -57,7 +57,26 @@ Or manually add to LM Studio MCP settings:
 
 ### Claude Desktop
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%/Claude/claude_desktop_config.json` (Windows):
+#### Option 1: Using Connectors UI (Recommended)
+
+1. Open Claude Desktop and go to **Settings**
+2. Navigate to **Connectors** section
+3. Click **Add custom connector**
+4. Fill in the details:
+   - **Name**: `hexjobs`
+   - **URL**: `https://mcp.hexjobs.com/mcp`
+5. Click **Add**
+6. Enable the hexjobs connector toggle
+
+<img src="/images/claude-connectors-settings.png" alt="Claude Desktop Connectors Settings" />
+
+<img src="/images/claude-connector-hexjobs.png" alt="Add Hexjobs Connector" />
+
+<img src="/images/claude-connector-enable.png" alt="Enable Hexjobs Connector" />
+
+#### Option 2: Manual Configuration File
+
+Alternatively, add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%/Claude/claude_desktop_config.json` (Windows):
 
 ```json
 {

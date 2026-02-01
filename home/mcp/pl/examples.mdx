@@ -1,0 +1,373 @@
+---
+title: "Przykłady użycia"
+description: "Praktyczne przykłady użycia serwera Hexjobs MCP"
+---
+
+# Przykłady użycia
+
+Naucz się efektywnie używać serwera Hexjobs MCP z praktycznymi przykładami.
+
+## Podstawowe wyszukiwanie ofert
+
+### Proste wyszukiwanie tekstowe
+
+Wyszukaj oferty używając języka naturalnego:
+
+```
+Znajdź oferty pracy dla programisty Python
+```
+
+Asystent AI użyje narzędzia `search` z:
+- `query`: "programista python"
+- Zwraca top 20 pasujących ofert
+
+---
+
+### Wyszukiwanie według firmy
+
+Szukaj stanowisk w konkretnych firmach:
+
+```
+Pokaż mi wszystkie oferty w Google
+```
+
+Używa:
+- `companies`: ["Google"]
+- Zwraca wszystkie dostępne stanowiska
+
+---
+
+## Wyszukiwanie według lokalizacji
+
+### Jedno miasto
+
+```
+Znajdź oferty IT w Warszawie
+```
+
+Parametry:
+- `query`: "IT"
+- `country`: "PL"
+- `cities`: ["Warszawa"]
+
+---
+
+### Wiele miast
+
+```
+Szukaj stanowisk Marketing w Krakowie lub Wrocławiu
+```
+
+Parametry:
+- `categories`: ["Marketing"]
+- `country`: "PL"
+- `cities`: ["Kraków", "Wrocław"]
+
+---
+
+### Praca zdalna
+
+```
+Pokaż mi zdalne stanowiska dla seniorów programistów
+```
+
+Parametry:
+- `query`: "programista"
+- `experience_levels`: ["senior"]
+- `is_remote`: true
+- `work_modes`: ["remote"]
+
+---
+
+## Zaawansowane filtrowanie
+
+### Filtr wynagrodzenia
+
+```
+Znajdź oferty IT w Niemczech z minimalnym wynagrodzeniem 5000 EUR
+```
+
+Parametry:
+- `categories`: ["IT"]
+- `country`: "DE"
+- `min_salary`: 5000
+
+---
+
+### Wiele kryteriów
+
+```
+Szukaj stanowisk senior B2B programista Python w Warszawie, praca zdalna, minimum 20000 PLN
+```
+
+Parametry:
+- `query`: "programista python"
+- `experience_levels`: ["senior"]
+- `contract_types`: ["B2B"]
+- `cities`: ["Warszawa"]
+- `work_modes`: ["remote"]
+- `min_salary`: 20000
+- `country`: "PL"
+
+---
+
+### Poziom doświadczenia
+
+```
+Znajdź oferty junior frontend developer
+```
+
+Parametry:
+- `query`: "frontend developer"
+- `experience_levels`: ["junior"]
+
+---
+
+## Analiza rynku
+
+### Przegląd kategorii
+
+```
+Jakie kategorie ofert pracy są dostępne?
+```
+
+Używa narzędzia `available_categories` do pokazania wszystkich kategorii wraz z liczbą ofert.
+
+---
+
+### Statystyki regionalne
+
+```
+Ile ofert IT jest dostępnych w każdym kraju?
+```
+
+Łączy:
+1. `available_countries` - pobiera wszystkie kraje
+2. `offers_count` dla każdego kraju z `categories`: ["IT"]
+
+---
+
+### Trendy kategorii
+
+```
+Które kategorie ofert mają najwięcej ofert?
+```
+
+Używa `available_categories` i sortuje według liczby.
+
+---
+
+## Szczegóły konkretnych ofert
+
+### Pokaż pełny opis stanowiska
+
+```
+Pokaż mi szczegóły oferty: python-developer-techcorp-123
+```
+
+Używa narzędzia `offer` z:
+- `slug`: "python-developer-techcorp-123"
+
+Zwraca pełne informacje o stanowisku włączając:
+- Pełny opis
+- Wymagania
+- Benefity
+- Informacje o firmie
+- Insighty wygenerowane przez AI
+
+---
+
+## Złożone zapytania
+
+### Wyszukiwanie międzynarodowe
+
+```
+Znajdź stanowiska CTO w Polsce lub Niemczech
+```
+
+Dwa osobne wyszukiwania:
+1. `country`: "PL", `query`: "CTO"
+2. `country`: "DE", `query`: "CTO"
+
+Połączone i zdeduplikowane wyniki.
+
+---
+
+### Analiza pracy hybrydowej
+
+```
+Ile ofert senior IT oferuje pracę hybrydową w Warszawie?
+```
+
+Używa `offers_count` z:
+- `categories`: ["IT"]
+- `experience_levels`: ["senior"]
+- `work_modes`: ["hybrid"]
+- `cities`: ["Warszawa"]
+- `country`: "PL"
+
+---
+
+### Porównanie wynagrodzeń
+
+```
+Porównaj średnie wynagrodzenia programistów Python w Warszawie vs Kraków
+```
+
+Wiele wywołań `search`:
+1. Warszawa: `query`: "python", `cities`: ["Warszawa"]
+2. Kraków: `query`: "python", `cities`: ["Kraków"]
+
+Analiza przedziałów wynagrodzeń z wyników.
+
+---
+
+## Przykłady przepływów pracy
+
+### Codzienne powiadomienia o ofertach
+
+Skonfiguruj asystenta AI, aby codziennie sprawdzał:
+
+```
+Sprawdź nowe oferty senior Python w Warszawie opublikowane dzisiaj
+```
+
+Używa:
+- `search` z odpowiednimi filtrami
+- Asystent może śledzić wcześniej widziane oferty
+- Powiadamia tylko o nowych stanowiskach
+
+---
+
+### Eksploracja ścieżki kariery
+
+```
+Pokaż mi progresję kariery od junior do senior developer
+```
+
+Wiele wyszukiwań:
+1. `experience_levels`: ["junior"]
+2. `experience_levels`: ["mid"]
+3. `experience_levels`: ["senior"]
+
+Porównaj wymagania i wynagrodzenia.
+
+---
+
+### Badanie firmy
+
+```
+Jakie typy stanowisk oferuje TechCorp?
+```
+
+Używa:
+- `search` z `companies`: ["TechCorp"]
+- Grupuj wyniki według kategorii
+- Analizuj wspólne wymagania
+
+---
+
+## Wskazówki dla lepszych wyników
+
+<Tip>
+**Używaj języka naturalnego** - wyszukiwanie semantyczne rozumie kontekst, więc "szukam stanowiska liderskiego w technologii" działa równie dobrze jak "stanowisko CTO".
+</Tip>
+
+<Tip>
+**Łącz filtry** - bardziej szczegółowe filtry prowadzą do bardziej trafnych wyników. Nie wahaj się używać wielu kryteriów.
+</Tip>
+
+<Tip>
+**Najpierw sprawdź dane rynkowe** - użyj narzędzi `available_*`, aby zobaczyć, jakie wartości są prawidłowe dla filtrów przed wyszukiwaniem.
+</Tip>
+
+<Warning>
+**Pamiętaj o limicie** - domyślnie 20 wyników, maksymalnie 100. Dla szerszych wyszukiwań użyj paginacji z `offset`.
+</Warning>
+
+## Przykładowe rozmowy
+
+### Poszukujący pracy
+
+<Steps>
+  <Step title="Wstępne wyszukiwanie">
+    "Szukam ofert dla programisty Python w Warszawie"
+  </Step>
+  <Step title="Zawęź">
+    "Pokaż mi tylko stanowiska senior z pracą zdalną"
+  </Step>
+  <Step title="Szczegóły">
+    "Powiedz mi więcej o pierwszej ofercie z listy"
+  </Step>
+  <Step title="Porównaj">
+    "Jaki jest przedział wynagrodzeń dla podobnych stanowisk w Krakowie?"
+  </Step>
+</Steps>
+
+### Rekruter
+
+<Steps>
+  <Step title="Przegląd rynku">
+    "Ile ofert IT jest obecnie dostępnych w Polsce?"
+  </Step>
+  <Step title="Podział kategorii">
+    "Jakie są najpopularniejsze podkategorie IT?"
+  </Step>
+  <Step title="Analiza wynagrodzeń">
+    "Jakie jest średnie wynagrodzenie dla seniorów programistów w Warszawie?"
+  </Step>
+  <Step title="Konkurencja">
+    "Ile firm rekrutuje na podobne stanowiska?"
+  </Step>
+</Steps>
+
+### Programista
+
+<Steps>
+  <Step title="Sprawdzenie umiejętności">
+    "Znajdź oferty wymagające Python i Django"
+  </Step>
+  <Step title="Lokalizacja">
+    "Które miasta mają najwięcej takich stanowisk?"
+  </Step>
+  <Step title="Wynagrodzenie">
+    "Pokaż mi tylko kontrakty B2B z wynagrodzeniem powyżej 20000"
+  </Step>
+  <Step title="Aplikuj">
+    "Daj mi link do aplikacji dla najlepszego wyniku"
+  </Step>
+</Steps>
+
+## Wzorce integracji
+
+### Bot Slack
+
+Utwórz bota Slack, który wysyła zapytania do Hexjobs:
+
+```
+/jobs znajdz python warszawa remote
+```
+
+Bot używa MCP do wyszukiwania i formatowania wyników dla Slack.
+
+---
+
+### Digest email
+
+Cotygodniowy email z pasującymi ofertami:
+
+1. Przechowuj preferencje użytkownika (umiejętności, lokalizacja, wynagrodzenie)
+2. Cotygodniowe zadanie cron wysyłające zapytania przez MCP
+3. Formatuj i wysyłaj email z nowymi dopasowaniami
+
+---
+
+### Własny dashboard
+
+Zbuduj dashboard pokazujący:
+- Trendy liczby ofert według kategorii
+- Przedziały wynagrodzeń w czasie
+- Top firmy rekrutujące
+- Dystrybucja regionalna
+
+Wszystkie dane pobierane przez narzędzia MCP.
